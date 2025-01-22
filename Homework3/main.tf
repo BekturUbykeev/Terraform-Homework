@@ -7,24 +7,24 @@ resource "aws_key_pair" "deployer" {
   public_key = file("~/.ssh/id_rsa.pub")
 }
 
-data "aws_ami" "ubuntu" {
+data "aws_ami" "amazon_linux_2" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"] # Amazon Linux 2
+}
 
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
 
-  owners = ["099720109477"] # Canonical
+  owners = ["137112412989"] # Canonical
 }
 
 resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
+  ami = data.aws_ami.amazon_linux_2.id
   instance_type = "t2.micro"
 #availability_zone = "us-east-2a"
 subnet_id = "subnet-0a8b6fd2a0aa68bbc"
@@ -37,7 +37,7 @@ user_data = file("apache.sh")
 }
 
 resource "aws_instance" "web2" {
-  ami           = data.aws_ami.ubuntu.id
+  ami = data.aws_ami.amazon_linux_2.id
   instance_type = "t2.micro"
 #availability_zone = "us-east-2b"
 subnet_id = "subnet-09f460e967f9237ac"
@@ -49,7 +49,7 @@ user_data = file("apache.sh")
   }
 }
 resource "aws_instance" "web3" {
- ami           = data.aws_ami.ubuntu.id
+ ami = data.aws_ami.amazon_linux_2.id
   instance_type = "t2.micro"
 #availability_zone = "us-east-2c"
 subnet_id = "subnet-01f71df8d6a7bcd26"
